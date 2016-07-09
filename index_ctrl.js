@@ -15,6 +15,7 @@ var IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', function($http, $q) 
     };
 
     this.isCelsius = true;
+    this.isReady = false;
 
     //get lats and lons
     navigator.geolocation.getCurrentPosition(function(position) {
@@ -37,6 +38,8 @@ var IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', function($http, $q) 
           this.weatherObj.name = obj.data.name;
           this.weatherObj.description = obj.data.weather[0].description;
           this.weatherObj.icon = obj.data.weather[0].icon;
+
+          this.isReady = true;
       }.bind(this));
     };
 

@@ -28,8 +28,8 @@
 
       <div class="weather-container" layout="row" layout-align="center stretch">
         <div class="weather-content" layout="column" layout-align="center center">
-          <div class="temp">
-            <img ng-src="assets/images/{{IndexCtrl.weatherObj.icon}}.png" alt="{{IndexCtrl.weatherObj.description}}" />
+          <div class="temp" ng-if="IndexCtrl.isReady">
+            <img class="weather-icon" ng-src="assets/images/{{IndexCtrl.weatherObj.icon}}.png" alt="{{IndexCtrl.weatherObj.description}}" />
             <span ng-click="IndexCtrl.toggleTemp()">{{IndexCtrl.weatherObj.temp}}
               <span ng-show="IndexCtrl.isCelsius">&#8451;</span>
               <span ng-show="!IndexCtrl.isCelsius">&#8457;</span>
