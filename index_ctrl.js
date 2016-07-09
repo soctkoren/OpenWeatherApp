@@ -26,7 +26,7 @@ var IndexCtrl = app.controller('IndexCtrl', ['$http', function($http) {
 
   // API call
   this.apiCall = function() {
-    $http.get('https://api.openweathermap.org/data/2.5/weather?lat=' + lat +
+    $http.get('http://api.openweathermap.org/data/2.5/weather?lat=' + lat +
               '&lon=' + lon + '&APPID=' + API_KEY)
         .then(function(response) {
           console.log(response);
