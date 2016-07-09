@@ -1,12 +1,22 @@
 var IndexCtrl = app.controller('IndexCtrl', ['$http', function($http) {
+  /** @const {string} */
   var API_KEY = '8f6c3116d20a6fa29db7e883b0f7e179';
+
+  /** @type {string} */
   var lat;
+
+  /** @type {string} */
   var lon;
+
   var obj;
 
+  /** @export {boolean} */
   this.isCelsius = true;
+
+  /** @export {boolean} */
   this.isReady = false;
 
+  /** @export {!Object} */
   this.weatherObj = {
     humidity: '',
     temp: '',
