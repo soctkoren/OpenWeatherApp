@@ -1,45 +1,47 @@
-<!doctype html>
-<html ng-app="mainApp">
+<!DOCTYPE html>
+<html ng-app="mainApp" lang="en">
 
-   <head>
-      <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
-      <link rel="stylesheet" href="main.css">
-   </head>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
+    <link rel="stylesheet" href="main.css">
+  </head>
 
-   <body ui-view>
-      <!-- AngularJS libraries -->
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.min.js"></script>
+  <body ui-view>
+    <!-- AngularJS libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-animate.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-aria.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.5/angular-messages.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.18/angular-ui-router.min.js"></script>
 
-      <!-- Angular Material library -->
-      <script src="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+    <!-- Angular Material library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
 
-      <!-- Material icons -->
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Material icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-      <!-- app.js -->
-      <script src="app.js"></script>
+    <!-- app.js -->
+    <script src="app.js"></script>
 
-      <!-- Controllers -->
-      <script src="index_ctrl.js"></script>
+    <!-- Controllers -->
+    <script src="index_ctrl.js"></script>
 
-      <div class="weather-container" layout="row" layout-align="center stretch">
-        <div class="weather-content" layout="column" layout-align="center center">
-          <div class="temp" ng-if="IndexCtrl.isReady">
-            <img class="weather-icon" ng-src="assets/images/{{IndexCtrl.weatherObj.icon}}.png" alt="{{IndexCtrl.weatherObj.description}}" />
-            <span ng-click="IndexCtrl.toggleTemp()">{{IndexCtrl.weatherObj.temp}}
-              <span ng-show="IndexCtrl.isCelsius">&#8451;</span>
-              <span ng-show="!IndexCtrl.isCelsius">&#8457;</span>
-            </span>
-          </div>
-          <div class="city">
-            {{IndexCtrl.weatherObj.name}}
-          </div>
-
+    <div class="weather-container" layout="row" layout-align="center stretch">
+      <div class="weather-content" layout="column" layout-align="center center">
+        <div class="temp" ng-if="IndexCtrl.isReady">
+          <img class="weather-icon" ng-src="assets/images/{{IndexCtrl.weatherObj.icon}}.png"
+               alt="{{IndexCtrl.weatherObj.description}}" />
+          <span ng-click="IndexCtrl.toggleTemp()">{{IndexCtrl.weatherObj.temp}}
+            <span ng-show="IndexCtrl.isCelsius">&#8451;</span>
+            <span ng-show="!IndexCtrl.isCelsius">&#8457;</span>
+          </span>
         </div>
+        <div class="city">
+          {{IndexCtrl.weatherObj.name}}
+        </div>
+
       </div>
-   </body>
+    </div>
+  </body>
 </html>
