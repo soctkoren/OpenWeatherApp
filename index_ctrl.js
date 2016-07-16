@@ -1,22 +1,19 @@
 var IndexCtrl = app.controller('IndexCtrl', ['$http', function($http) {
   /** @const {string} */
-  var API_KEY = '8f6c3116d20a6fa29db7e883b0f7e179';
+  // const API_KEY = '8f6c3116d20a6fa29db7e883b0f7e179';
+  const API_KEY = '659f89cf0dd4f5c254d169cafbc41e9f';
 
-  /** @type {string} */
-  var lat;
+  /** @const {string} */
+  // const API_URL = 'http://api.openweathermap.org/data/2.5/weather?lat=';
+  const API_URL = 'https://api.forecast.io/forecast/';
 
-  /** @type {string} */
-  var lon;
-
-  var obj;
-
-  /** @export {boolean} */
+  /** @type {boolean} */
   this.isCelsius = true;
 
-  /** @export {boolean} */
+  /** @type {boolean} */
   this.isReady = false;
 
-  /** @export {!Object} */
+  /** @type {!Object} */
   this.weatherObj = {
     humidity: '',
     temp: '',
@@ -25,43 +22,66 @@ var IndexCtrl = app.controller('IndexCtrl', ['$http', function($http) {
     name: '',
     description: '',
     icon: ''
-    };
-
-  // Gets latitude and longitude.
-  navigator.geolocation.getCurrentPosition(function(position) {
-    lat = position.coords.latitude;
-    lon = position.coords.longitude;
-    this.apiCall();
-  }.bind(this));
-
-  // API call
-  this.apiCall = function() {
-    $http.get('http://api.openweathermap.org/data/2.5/weather?lat=' + lat +
-              '&lon=' + lon + '&APPID=' + API_KEY)
-        .then(function(response) {
-          console.log(response);
-          obj = response;
-          this.weatherObj.humidity = obj.data.main.humidity;
-          this.weatherObj.tempCelsius = kelvinToCelsius(obj.data.main.temp);
-          this.weatherObj.tempFahrenheit =
-              celsiusToFahrenheit(this.weatherObj.tempCelsius);
-          this.weatherObj.temp = this.weatherObj.tempCelsius;
-          this.weatherObj.name = obj.data.name;
-          this.weatherObj.description = obj.data.weather[0].description;
-          this.weatherObj.icon = obj.data.weather[0].icon;
-
-          this.isReady = true;
-      }.bind(this));
   };
 
-  var celsiusToFahrenheit = function(temp) {
+  /**
+   * Gets latitude and longitude information from the browser then passes them
+   * into apiCall.
+   */
+  navigator.geolocation.getCurrentPosition(function(position) {
+    let latitude = position.coords.latitude;
+    let longitude = position.coords.longitude;
+    this.apiCall_(latitude, longitude);
+  }.bind(this));
+
+  /**
+   * Gets weather information from the API.
+   * @private
+   * @param {number} latitude
+   * @param {number} longitude
+   */
+  this.apiCall_ = function(latitude, longitude) {
+    // $http.get(API_URL + latitude + '&lon=' + longitude + '&APPID=' + API_KEY)
+    $http.get(API_URL + API_KEY + '/' + latitude + ',' + longitude)
+        .then(function(response) {
+          console.log(response);
+          this.weatherObj.humidity = response.data.main.humidity;
+          this.weatherObj.tempCelsius =
+              kelvinToCelsius_(response.data.main.temp);
+          this.weatherObj.tempFahrenheit =
+              celsiusToFahrenheit_(this.weatherObj.tempCelsius);
+          this.weatherObj.temp = this.weatherObj.tempCelsius;
+          this.weatherObj.name = response.data.name;
+          this.weatherObj.description = response.data.weather[0].description;
+          this.weatherObj.icon = response.data.weather[0].icon;
+
+          this.isReady = true;
+        }.bind(this));
+  };
+
+  /**
+   * Converts temperature in Celsius to Fahrenheit.
+   * @private
+   * @param {number} temp
+   * @return {number}
+   */
+  var celsiusToFahrenheit_ = function(temp) {
     return Math.round(temp * 1.8 + 32);
   };
 
-  var kelvinToCelsius = function(temp) {
+  /**
+   * Converts temperature in Kelvin to Celsius.
+   * @private
+   * @param {number} temp
+   * @return {number}
+   */
+  var kelvinToCelsius_ = function(temp) {
     return Math.round(temp - 273.15);
   };
 
+  /**
+   * Switches between displaying the temperature in Celsius and Fahrenheit.
+   */
   this.toggleTemp = function() {
     if (this.isCelsius) {
       this.weatherObj.temp = this.weatherObj.tempFahrenheit;
