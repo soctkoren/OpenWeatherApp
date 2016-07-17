@@ -1,9 +1,17 @@
-var IndexCtrl = app.controller('IndexCtrl', ['$http', function($http) {
+let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q',
+    function($http, $q) {
   /** @const {string} */
-  const API_KEY = '659f89cf0dd4f5c254d169cafbc41e9f';
+  const WEATHER_API_KEY = '659f89cf0dd4f5c254d169cafbc41e9f';
 
   /** @const {string} */
-  const API_URL = 'https://api.forecast.io/forecast/';
+  const WEATHER_API_URL = 'https://api.forecast.io/forecast/';
+
+  /** @const {string} */
+  const MAPS_API_KEY = 'AIzaSyDvnLSkKRqub80ezSWW6K6TArPe-N29iuQ';
+
+  /** @const {string} */
+  const MAPS_API_URL =
+      'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
 
   /** @type {boolean} */
   this.isFahrenheit = true;
@@ -17,58 +25,81 @@ var IndexCtrl = app.controller('IndexCtrl', ['$http', function($http) {
     temp: '',
     tempCelsius: '',
     tempFahrenheit: '',
-    name: '',
+    city: '',
     description: '',
     icon: ''
   };
 
   /**
    * Gets latitude and longitude information from the browser then passes them
-   * into apiCall.
+   * into the API functions.
    */
   navigator.geolocation.getCurrentPosition(function(position) {
     let latitude = position.coords.latitude;
     let longitude = position.coords.longitude;
-    this.apiCall_(latitude, longitude);
+
+    $q.all([this.getWeather_(latitude, longitude),
+           this.getCity_(latitude, longitude)])
+        .then(function() {
+          this.isReady = true;
+        }.bind(this));
   }.bind(this), function(error) {
     // Default to Sunnyvale on error.
     let latitude = 37.3688;
     let longitude = -122.0363;
-    this.apiCall_(latitude, longitude);
+
+    $q.all([this.getWeather_(latitude, longitude),
+           this.getCity_(latitude, longitude)])
+        .then(function() {
+          this.isReady = true;
+        }.bind(this));
   }.bind(this));
 
   /**
-   * Gets weather information from the API.
+   * Gets weather information from the weather API.
    * @private
    * @param {number} latitude
    * @param {number} longitude
+   * @return {!angular.$q.Promise}
    */
-  this.apiCall_ = function(latitude, longitude) {
-    $http.get(API_URL + API_KEY + '/' + latitude + ',' + longitude)
+  this.getWeather_ = function(latitude, longitude) {
+    return $http.get(WEATHER_API_URL + WEATHER_API_KEY + '/' + latitude + ',' +
+                     longitude)
         .then(function(response) {
-          console.log(response);
           this.weatherObj.humidity = response.data.currently.humidity;
           this.weatherObj.tempFahrenheit =
               Math.round(response.data.currently.temperature);
           this.weatherObj.tempCelsius =
               fahrenheitToCelsius_(response.data.currently.temperature);
           this.weatherObj.temp = this.weatherObj.tempFahrenheit;
-          this.weatherObj.name = response.data.timezone;
           this.weatherObj.description = response.data.currently.summary;
           this.weatherObj.icon = response.data.currently.icon;
-
-          console.log(this.weatherObj);
-          this.isReady = true;
         }.bind(this));
   };
 
   /**
-   * Converts temperature in Fahrenheit to Celsius.
+   * Gets the city from the Maps API.
+   * @private
+   * @param {number} latitude
+   * @param {number} longitude
+   * @return {!angular.$q.Promise}
+   */
+  this.getCity_ = function(latitude, longitude) {
+    return $http.get(MAPS_API_URL + latitude + ',' + longitude + '&key=' +
+                     MAPS_API_KEY)
+        .then(function(response) {
+          this.weatherObj.city =
+              response.data.results[2].address_components[0].long_name;
+        }.bind(this));
+  };
+
+  /**
+   * Converts temperature from Fahrenheit to Celsius.
    * @private
    * @param {number} temp
    * @return {number}
    */
-  var fahrenheitToCelsius_ = function(temp) {
+  let fahrenheitToCelsius_ = function(temp) {
     return Math.round((temp - 32) / 1.8);
   };
 

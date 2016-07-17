@@ -35,17 +35,18 @@
     <script src="index_ctrl.js"></script>
 
     <div class="weather-container" layout="row" layout-align="center stretch">
-      <div class="weather-content" layout="column" layout-align="center center">
-        <div class="temp" ng-if="IndexCtrl.isReady">
+      <div class="weather-content" layout="column" layout-align="center center"
+           ng-if="IndexCtrl.isReady">
+        <div class="temp">
           <img class="weather-icon" ng-src="assets/images/{{IndexCtrl.weatherObj.icon}}.png"
                alt="{{IndexCtrl.weatherObj.description}}" />
-          <span ng-click="IndexCtrl.toggleTemp()">{{IndexCtrl.weatherObj.temp}}
-            <span ng-show="IndexCtrl.isCelsius">&#8451;</span>
-            <span ng-show="!IndexCtrl.isCelsius">&#8457;</span>
+          <span ng-dblclick="IndexCtrl.toggleTemp()">{{IndexCtrl.weatherObj.temp}}&deg;
+            <span ng-show="IndexCtrl.isFahrenheit">F</span>
+            <span ng-show="!IndexCtrl.isFahrenheit">C</span>
           </span>
         </div>
         <div class="city">
-          {{IndexCtrl.weatherObj.name}}
+          {{IndexCtrl.weatherObj.city}}
         </div>
 
       </div>
