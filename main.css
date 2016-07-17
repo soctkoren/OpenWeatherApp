@@ -8,20 +8,16 @@ body {
 
 .weather-container {
   height: 100%;
-
 }
 
-.weather-content {
-
-}
-
-.temp {
+.weather-temp {
   display: inline-block;
   text-align: center;
 }
 
-.name {
-
+.weather-no-select {
+  -webkit-user-select: none;
+  cursor: default;
 }
 
 .weather-icon {
