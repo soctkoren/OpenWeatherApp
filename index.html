@@ -34,6 +34,9 @@
     <!-- Controllers -->
     <script src="index_ctrl.js"></script>
 
+     <!-- Services -->
+    <script src="youtube_service.js"></script>
+
     <div class="weather-container" layout="row" layout-align="center stretch">
       <div class="weather-no-select" layout="column" layout-align="center center"
            ng-if="IndexCtrl.isReady">
@@ -49,7 +52,20 @@
           {{IndexCtrl.weatherObj.city}}
         </div>
 
+        <br>
+
+        <i class="material-icons weather-audio-icon" ng-click="IndexCtrl.mute()"
+           ng-show="IndexCtrl.isMuted">
+          volume_up
+        </i>
+        <i class="material-icons weather-audio-icon" ng-click="IndexCtrl.mute()"
+           ng-show="!IndexCtrl.isMuted">
+          volume_off
+        </i>
+
       </div>
+      <div id="player" ng-hide="true">test</div>
     </div>
+
   </body>
 </html>

@@ -3,15 +3,9 @@ let app = angular.module('mainApp', [
   'ui.router'
 ]);
 
-app.config([
-  '$mdThemingProvider', '$stateProvider', '$urlRouterProvider',
-  function($mdThemingProvider, $stateProvider, $urlRouterProvider) {
+app.config(['$stateProvider', '$urlRouterProvider',
+  function($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
-
-    $mdThemingProvider.theme('default')
-        .primaryPalette('indigo')
-        .accentPalette('pink')
-        .backgroundPalette('grey');
 
     $stateProvider
     .state('home', {
