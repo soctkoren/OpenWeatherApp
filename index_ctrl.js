@@ -63,8 +63,8 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q',
    * @return {!angular.$q.Promise}
    */
   this.getWeather_ = function(latitude, longitude) {
-    return $http.get(WEATHER_API_URL + WEATHER_API_KEY + '/' + latitude + ',' +
-                     longitude)
+    return $http.jsonp(WEATHER_API_URL + WEATHER_API_KEY + '/' + latitude +
+                       ',' + longitude + '?callback=JSON_CALLBACK')
         .then(function(response) {
           this.weatherObj.humidity = response.data.currently.humidity;
           this.weatherObj.tempFahrenheit =
