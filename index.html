@@ -32,6 +32,8 @@
     <script src="app.js"></script>
 
     <!-- Controllers -->
+    <!-- <script src="yt.js"></script> -->
+    <script src="youtube_service.js"></script>
     <script src="index_ctrl.js"></script>
 
     <div class="weather-container" layout="row" layout-align="center stretch">
@@ -49,7 +51,16 @@
           {{IndexCtrl.weatherObj.city}}
         </div>
 
+        <i class="material-icons" ng-click="IndexCtrl.unMute()" ng-show="IndexCtrl.isMuted">
+          volume_up
+        </i>
+        <i class="material-icons" ng-click="IndexCtrl.mute()" ng-show="!IndexCtrl.isMuted">
+          volume_off
+        </i> {{IndexCtrl.isMuted}}
+
       </div>
+      <div id="player" ng-hide="true">test</div>
     </div>
+
   </body>
 </html>

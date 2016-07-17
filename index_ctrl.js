@@ -1,5 +1,5 @@
-let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q',
-    function($http, $q) {
+let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
+    'YouTubeService', function($http, $q, $scope, YouTubeService) {
   /** @const {string} */
   const WEATHER_API_KEY = '659f89cf0dd4f5c254d169cafbc41e9f';
 
@@ -18,6 +18,9 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q',
 
   /** @type {boolean} */
   this.isReady = false;
+
+  /** @type {boolean} */
+  this.isMuted = false;
 
   /** @type {!Object} */
   this.weatherObj = {
@@ -114,5 +117,29 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q',
     }
 
     this.isFahrenheit = !this.isFahrenheit;
+  };
+
+  $scope.$watch(function() {
+    return YouTubeService.getMuteStatus();
+  }, function(newMuteStatus, oldMuteStatus) {
+    if (newMuteStatus !== oldMuteStatus) {
+      this.isMuted = newMuteStatus;
+    }
+  }.bind(this));
+
+  /**
+   * Mutes the audio.
+   */
+  this.mute = function() {
+    console.log('mute');
+    YouTubeService.mute();
+  };
+
+  /**
+   * Unmutes the audio.
+   */
+  this.unMute = function() {
+    console.log('unmute');
+    YouTubeService.unMute();
   };
 }]);
