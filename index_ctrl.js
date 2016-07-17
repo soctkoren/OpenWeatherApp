@@ -20,7 +20,7 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
   this.isReady = false;
 
   /** @type {boolean} */
-  this.isMuted = false;
+  this.isMuted;
 
   /** @type {!Object} */
   this.weatherObj = {
@@ -32,6 +32,15 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
     description: '',
     icon: ''
   };
+
+  // Watches and changes isMuted as necessary.
+  $scope.$watch(function() {
+    return YouTubeService.getMuteStatus();
+  }, function(newMuteStatus, oldMuteStatus) {
+    if (newMuteStatus !== oldMuteStatus) {
+      this.isMuted = newMuteStatus;
+    }
+  }.bind(this));
 
   /**
    * Gets latitude and longitude information from the browser then passes them
@@ -119,27 +128,10 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
     this.isFahrenheit = !this.isFahrenheit;
   };
 
-  $scope.$watch(function() {
-    return YouTubeService.getMuteStatus();
-  }, function(newMuteStatus, oldMuteStatus) {
-    if (newMuteStatus !== oldMuteStatus) {
-      this.isMuted = newMuteStatus;
-    }
-  }.bind(this));
-
   /**
-   * Mutes the audio.
+   * Mutes or unmutes the audio.
    */
   this.mute = function() {
-    console.log('mute');
     YouTubeService.mute();
-  };
-
-  /**
-   * Unmutes the audio.
-   */
-  this.unMute = function() {
-    console.log('unmute');
-    YouTubeService.unMute();
   };
 }]);

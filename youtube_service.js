@@ -27,33 +27,25 @@ let YouTubeService = app.factory('YouTubeService', ['$window',
   // The API will call this function when the video player is ready.
   let onPlayerReady = function(event) {
     event.target.playVideo();
-    this.isMuted = player.isMuted();
   };
 
   /**
    * @return {boolean}
    */
   this.getMuteStatus = function() {
-    if (player) {
-      this.isMuted = player.isMuted();
-    }
     return this.isMuted;
   };
 
   /**
-   * Mutes the audio.
+   * Mutes or unmutes the audio.
    */
   this.mute = function() {
-    player.mute();
-    this.isMuted = true;
-  };
-
-  /**
-   * Unmutes the audio.
-   */
-  this.unMute = function() {
-    player.unMute();
-    this.isMuted = false;
+    if (this.isMuted) {
+      player.unMute();
+    } else {
+      player.mute();
+    }
+    this.isMuted = !this.isMuted;
   };
 
   return this;
