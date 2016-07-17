@@ -35,9 +35,9 @@
     <script src="index_ctrl.js"></script>
 
     <div class="weather-container" layout="row" layout-align="center stretch">
-      <div class="weather-content" layout="column" layout-align="center center"
+      <div class="weather-no-select" layout="column" layout-align="center center"
            ng-if="IndexCtrl.isReady">
-        <div class="temp">
+        <div class="weather-temp">
           <img class="weather-icon" ng-src="assets/images/{{IndexCtrl.weatherObj.icon}}.png"
                alt="{{IndexCtrl.weatherObj.description}}" />
           <span ng-dblclick="IndexCtrl.toggleTemp()">{{IndexCtrl.weatherObj.temp}}&deg;
