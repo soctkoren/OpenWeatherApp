@@ -1,5 +1,5 @@
-let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
-    'SoundCloudService', function($http, $q, $scope, SoundCloudService) {
+let IndexCtrl = app.controller('IndexCtrl', ['$element', '$http', '$q', '$scope',
+    'SoundCloudService', function($element, $http, $q, $scope, SoundCloudService) {
   /** @const {string} */
   const WEATHER_API_KEY = '659f89cf0dd4f5c254d169cafbc41e9f';
 
@@ -92,6 +92,7 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
           this.weatherObj.description = response.data.currently.summary;
           this.weatherObj.icon = response.data.currently.icon;
           SoundCloudService.init(ICON_TO_SONG_ID[this.weatherObj.icon]);
+          $element.css({'background-image': 'url(' + 'https://source.unsplash.com/random' +')'});
         }.bind(this));
   };
 
@@ -134,6 +135,10 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
   let fahrenheitToCelsius_ = function(temp) {
     return Math.round((temp - 32) / 1.8);
   };
+
+  let setBackground = function(){
+
+  }
 
   /**
    * Switches between displaying the temperature in Celsius and Fahrenheit.
