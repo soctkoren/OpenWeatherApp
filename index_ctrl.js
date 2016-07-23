@@ -100,8 +100,22 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
     return $http.get(MAPS_API_URL + latitude + ',' + longitude + '&key=' +
                      MAPS_API_KEY)
         .then(function(response) {
-          this.weatherObj.city =
-              response.data.results[2].address_components[0].long_name;
+          let city;
+
+          outerLoop:
+          for (let i = 0; i < response.data.results.length; i++) {
+            let address_components =
+                response.data.results[i].address_components;
+
+            for (let j = 0; j < address_components.length; j++) {
+              if (address_components[j].types.indexOf('locality') >= 0) {
+                city = address_components[j].long_name;
+                break outerLoop;
+              }
+            }
+          }
+
+          this.weatherObj.city = city;
         }.bind(this));
   };
 
