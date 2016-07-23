@@ -14,17 +14,17 @@ let IndexCtrl = app.controller('IndexCtrl', ['$element', '$http', '$q', '$scope'
       'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
 
   const ICON_TO_SONG_ID = {
-    'clear-day': '271260213',
-    'clear-night': '271260213',
-    'cloudy': '271260213',
-    'fog': '271260213',
-    'partly-cloudy-day': '271260213',
-    'partly-cloudy-night': '271260213',
-    'rain': '271260213',
-    'sleet': '271260213',
-    'snow': '271260213',
-    'wind': '271260213',
-    'default': '271260213'
+    'clear-day': ['275029462','-icmOdYWXuQ'],
+    'clear-night': ['275036864','0LU4vO5iFpM'],
+    'cloudy': ['275032933','SIoHky3TPeo'],
+    'fog': ['275032933','8BmNurlVR6M'],
+    'partly-cloudy-day': ['275029462','ooJi3CJQRa8'],
+    'partly-cloudy-night': ['275036864','V6s1cmE39XM'],
+    'rain': ['274965610','pGQbWXBC1dA'],
+    'sleet': ['275036864','9yhy1FXlKwI'],
+    'snow': ['275036864','aAQwxN-EOUI'],
+    'wind': ['275036864','49Q0vhYLMD0'],
+    'default': ['275032933','UklXbPE-Hos']
   };
 
   /** @type {boolean} */
@@ -91,8 +91,8 @@ let IndexCtrl = app.controller('IndexCtrl', ['$element', '$http', '$q', '$scope'
           this.weatherObj.temp = this.weatherObj.tempFahrenheit;
           this.weatherObj.description = response.data.currently.summary;
           this.weatherObj.icon = response.data.currently.icon;
-          SoundCloudService.init(ICON_TO_SONG_ID[this.weatherObj.icon]);
-          $element.css({'background-image': 'url(' + 'https://source.unsplash.com/random' +')'});
+          SoundCloudService.init(ICON_TO_SONG_ID[this.weatherObj.icon][0]);
+          $element.css({'background-image': 'url(' + 'https://source.unsplash.com/' + ICON_TO_SONG_ID[this.weatherObj.icon][1] + '/1600x900' +')'});
         }.bind(this));
   };
 
