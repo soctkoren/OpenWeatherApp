@@ -1,5 +1,5 @@
 let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
-    'YouTubeService', function($http, $q, $scope, YouTubeService) {
+    'SoundCloudService', function($http, $q, $scope, SoundCloudService) {
   /** @const {string} */
   const WEATHER_API_KEY = '659f89cf0dd4f5c254d169cafbc41e9f';
 
@@ -13,6 +13,20 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
   const MAPS_API_URL =
       'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
 
+  const ICON_TO_SONG_ID = {
+    'clear-day': '271260213',
+    'clear-night': '271260213',
+    'cloudy': '271260213',
+    'fog': '271260213',
+    'partly-cloudy-day': '271260213',
+    'partly-cloudy-night': '271260213',
+    'rain': '271260213',
+    'sleet': '271260213',
+    'snow': '271260213',
+    'wind': '271260213',
+    'default': '271260213'
+  };
+
   /** @type {boolean} */
   this.isFahrenheit = true;
 
@@ -20,7 +34,7 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
   this.isReady = false;
 
   /** @type {boolean} */
-  this.isMuted;
+  this.isPaused = SoundCloudService.getPauseStatus();
 
   /** @type {!Object} */
   this.weatherObj = {
@@ -32,15 +46,6 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
     description: '',
     icon: ''
   };
-
-  // Watches and changes isMuted as necessary.
-  $scope.$watch(function() {
-    return YouTubeService.getMuteStatus();
-  }, function(newMuteStatus, oldMuteStatus) {
-    if (newMuteStatus !== oldMuteStatus) {
-      this.isMuted = newMuteStatus;
-    }
-  }.bind(this));
 
   /**
    * Gets latitude and longitude information from the browser then passes them
@@ -86,6 +91,7 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
           this.weatherObj.temp = this.weatherObj.tempFahrenheit;
           this.weatherObj.description = response.data.currently.summary;
           this.weatherObj.icon = response.data.currently.icon;
+          SoundCloudService.init(ICON_TO_SONG_ID[this.weatherObj.icon]);
         }.bind(this));
   };
 
@@ -142,10 +148,15 @@ let IndexCtrl = app.controller('IndexCtrl', ['$http', '$q', '$scope',
     this.isFahrenheit = !this.isFahrenheit;
   };
 
-  /**
-   * Mutes or unmutes the audio.
-   */
-  this.mute = function() {
-    YouTubeService.mute();
+  this.pause = function() {
+    SoundCloudService.pause();
   };
+
+  $scope.$watch(function() {
+    return SoundCloudService.getPauseStatus();
+  }, function(newPauseStatus, oldPauseStatus) {
+    if (newPauseStatus !== oldPauseStatus) {
+      this.isPaused = newPauseStatus;
+    }
+  }.bind(this));
 }]);
