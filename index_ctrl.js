@@ -14,7 +14,7 @@ let IndexCtrl = app.controller('IndexCtrl', ['$element', '$http', '$q', '$scope'
       'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
 
   const ICON_TO_SONG_ID = {
-    'clear-day': ['275029462','-icmOdYWXuQ'],
+    'clear-day': ['274965610','FkNzeOnsA0g'],
     'clear-night': ['275036864','0LU4vO5iFpM'],
     'cloudy': ['275032933','SIoHky3TPeo'],
     'fog': ['275032933','8BmNurlVR6M'],
@@ -91,6 +91,7 @@ let IndexCtrl = app.controller('IndexCtrl', ['$element', '$http', '$q', '$scope'
           this.weatherObj.temp = this.weatherObj.tempFahrenheit;
           this.weatherObj.description = response.data.currently.summary;
           this.weatherObj.icon = response.data.currently.icon;
+          console.log(ICON_TO_SONG_ID[this.weatherObj.icon][0]);
           SoundCloudService.init(ICON_TO_SONG_ID[this.weatherObj.icon][0]);
           $element.css({'background-image': 'url(' + 'https://source.unsplash.com/' + ICON_TO_SONG_ID[this.weatherObj.icon][1] + '/1600x900' +')'});
         }.bind(this));
