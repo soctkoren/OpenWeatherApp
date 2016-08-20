@@ -1,32 +1,6 @@
-let IndexCtrl = app.controller('IndexCtrl', ['$element', '$http', '$q', '$scope',
-    'SoundCloudService', function($element, $http, $q, $scope, SoundCloudService) {
-  /** @const {string} */
-  const WEATHER_API_KEY = '659f89cf0dd4f5c254d169cafbc41e9f';
-
-  /** @const {string} */
-  const WEATHER_API_URL = 'https://api.forecast.io/forecast/';
-
-  /** @const {string} */
-  const MAPS_API_KEY = 'AIzaSyDvnLSkKRqub80ezSWW6K6TArPe-N29iuQ';
-
-  /** @const {string} */
-  const MAPS_API_URL =
-      'https://maps.googleapis.com/maps/api/geocode/json?latlng=';
-
-  const ICON_TO_SONG_ID = {
-    'clear-day': ['274965610','FkNzeOnsA0g'],
-    'clear-night': ['275036864','0LU4vO5iFpM'],
-    'cloudy': ['275032933','SIoHky3TPeo'],
-    'fog': ['275032933','8BmNurlVR6M'],
-    'partly-cloudy-day': ['275029462','ooJi3CJQRa8'],
-    'partly-cloudy-night': ['275036864','V6s1cmE39XM'],
-    'rain': ['274965610','pGQbWXBC1dA'],
-    'sleet': ['275036864','9yhy1FXlKwI'],
-    'snow': ['275036864','aAQwxN-EOUI'],
-    'wind': ['275036864','49Q0vhYLMD0'],
-    'default': ['275032933','UklXbPE-Hos']
-  };
-
+let IndexCtrl = app.controller('IndexCtrl', [
+    '$element', '$http', '$q', '$scope', 'constants', 'SoundCloudService',
+    function($element, $http, $q, $scope, constants, SoundCloudService) {
   /** @type {boolean} */
   this.isFahrenheit = true;
 
@@ -51,38 +25,38 @@ let IndexCtrl = app.controller('IndexCtrl', ['$element', '$http', '$q', '$scope'
    * Gets latitude and longitude information from the browser then passes them
    * into the API functions.
    */
-  navigator.geolocation.getCurrentPosition(function(position) {
+  navigator.geolocation.getCurrentPosition((position) => {
     let latitude = position.coords.latitude;
     let longitude = position.coords.longitude;
 
     $q.all([this.getWeather_(latitude, longitude),
            this.getCity_(latitude, longitude)])
-        .then(function() {
+        .then(() => {
           this.isReady = true;
-        }.bind(this));
-  }.bind(this), function(error) {
+        });
+  }, (error) => {
     // Default to Sunnyvale on error.
     let latitude = 37.3688;
     let longitude = -122.0363;
 
     $q.all([this.getWeather_(latitude, longitude),
            this.getCity_(latitude, longitude)])
-        .then(function() {
+        .then(() => {
           this.isReady = true;
-        }.bind(this));
-  }.bind(this));
+        });
+  });
 
   /**
    * Gets weather information from the weather API.
-   * @private
    * @param {number} latitude
    * @param {number} longitude
    * @return {!angular.$q.Promise}
+   * @private
    */
   this.getWeather_ = function(latitude, longitude) {
-    return $http.jsonp(WEATHER_API_URL + WEATHER_API_KEY + '/' + latitude +
-                       ',' + longitude + '?callback=JSON_CALLBACK')
-        .then(function(response) {
+    return $http.jsonp(constants.API_URL.WEATHER + constants.API_KEY.WEATHER +
+        '/' + latitude + ',' + longitude + '?callback=JSON_CALLBACK')
+        .then((response) => {
           this.weatherObj.humidity = response.data.currently.humidity;
           this.weatherObj.tempFahrenheit =
               Math.round(response.data.currently.temperature);
@@ -91,23 +65,27 @@ let IndexCtrl = app.controller('IndexCtrl', ['$element', '$http', '$q', '$scope'
           this.weatherObj.temp = this.weatherObj.tempFahrenheit;
           this.weatherObj.description = response.data.currently.summary;
           this.weatherObj.icon = response.data.currently.icon;
-          console.log(ICON_TO_SONG_ID[this.weatherObj.icon][0]);
-          SoundCloudService.init(ICON_TO_SONG_ID[this.weatherObj.icon][0]);
-          $element.css({'background-image': 'url(' + 'https://source.unsplash.com/' + ICON_TO_SONG_ID[this.weatherObj.icon][1] + '/1600x900' +')'});
-        }.bind(this));
+          console.log(constants.ICON_TO_SONG_ID[this.weatherObj.icon][0]);
+          SoundCloudService.init(
+              constants.ICON_TO_SONG_ID[this.weatherObj.icon][0]);
+          $element.css(
+              {'background-image': 'url(' + constants.API_URL.IMAGES +
+                  constants.ICON_TO_SONG_ID[this.weatherObj.icon][1] +
+                  '/1600x900)'});
+        });
   };
 
   /**
    * Gets the city from the Maps API.
-   * @private
    * @param {number} latitude
    * @param {number} longitude
    * @return {!angular.$q.Promise}
+   * @private
    */
   this.getCity_ = function(latitude, longitude) {
-    return $http.get(MAPS_API_URL + latitude + ',' + longitude + '&key=' +
-                     MAPS_API_KEY)
-        .then(function(response) {
+    return $http.get(constants.API_URL.MAPS + latitude + ',' + longitude +
+        '&key=' + constants.API_KEY.MAPS)
+        .then((response) => {
           let city;
 
           outerLoop:
@@ -124,14 +102,14 @@ let IndexCtrl = app.controller('IndexCtrl', ['$element', '$http', '$q', '$scope'
           }
 
           this.weatherObj.city = city;
-        }.bind(this));
+        });
   };
 
   /**
    * Converts temperature from Fahrenheit to Celsius.
-   * @private
    * @param {number} temp
    * @return {number}
+   * @private
    */
   let fahrenheitToCelsius_ = function(temp) {
     return Math.round((temp - 32) / 1.8);
@@ -154,15 +132,18 @@ let IndexCtrl = app.controller('IndexCtrl', ['$element', '$http', '$q', '$scope'
     this.isFahrenheit = !this.isFahrenheit;
   };
 
+  /**
+   * Pauses and resumes the soundcloud stream.
+   */
   this.pause = function() {
     SoundCloudService.pause();
   };
 
-  $scope.$watch(function() {
+  $scope.$watch(() => {
     return SoundCloudService.getPauseStatus();
-  }, function(newPauseStatus, oldPauseStatus) {
+  }, (newPauseStatus, oldPauseStatus) => {
     if (newPauseStatus !== oldPauseStatus) {
       this.isPaused = newPauseStatus;
     }
-  }.bind(this));
+  });
 }]);

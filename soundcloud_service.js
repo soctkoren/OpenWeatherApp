@@ -1,22 +1,21 @@
-let SoundCloudService = app.factory('SoundCloudService', ['$window',
-    function($window) {
+let SoundCloudService = app.factory('SoundCloudService', [
+    '$window', 'constants', function($window, constants) {
   /** @type {boolean} */
   this.isPaused = false;
 
   let player;
 
-  let CLIENT_ID = '37b82b36d149205f71271ba1e4f08cda';
-
   this.init = function(songID) {
     $window.SC.initialize({
-      client_id: CLIENT_ID
+      client_id: constants.API_KEY.SOUNDCLOUD
     });
 
-    $window.SC.stream('/tracks/' + songID).then(function(scPlayer){
+    $window.SC.stream('/tracks/' + songID).then((scPlayer) => {
       scPlayer.play();
       player = scPlayer;
     });
   };
+
   /**
    * @return {boolean}
    */
@@ -33,6 +32,7 @@ let SoundCloudService = app.factory('SoundCloudService', ['$window',
     } else {
       player.pause();
     }
+
     this.isPaused = !this.isPaused;
   };
 
